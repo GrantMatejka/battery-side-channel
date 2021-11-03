@@ -1,6 +1,7 @@
 # A proof of concept implementation before moving to the arduino
 import time
 import random
+import sys
 
 SECRET = "password"
 PIN = "%s" % random.randint(1000, 9999)
@@ -11,8 +12,8 @@ def start_puzzle():
   battery = MAX_BATTERY
   drain_battery = False
 
-  print(PIN)
-
+  # we will give it to them, where if they solve it while simultaneously draining
+  # the battery, it'll be ok
   while not solved:
     if battery <= 0:
       print("\nYou were too slow, sorry.\nNo secret for you!")
@@ -32,7 +33,8 @@ def start_puzzle():
       display_calculating(solved, battery)
       if guess == PIN:
         solved = True
-      elif drain_battery:
+
+      if drain_battery:
         battery -= (decrease_battery_rate / (time_remaining + 1))
       else:
         leading_nums_factor = 1
@@ -60,5 +62,8 @@ def display_result(solved, battery):
 
 
 if __name__ == "__main__":
+  if len(sys.argv) > 1 and sys.argv[1] == "-c":
+      print(PIN)
+
   start_puzzle()
   #display("", True, 80)
