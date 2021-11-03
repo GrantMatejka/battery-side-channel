@@ -3,7 +3,7 @@ import time
 import random
 
 SECRET = "password"
-PIN = str(random.randint(1000, 9999))
+PIN = "%s" % random.randint(1000, 9999)
 MAX_BATTERY = 100
 
 def start_puzzle():
@@ -11,35 +11,34 @@ def start_puzzle():
   battery = MAX_BATTERY
   drain_battery = False
 
+  print(PIN)
+
   while not solved:
     if battery <= 0:
-      print("You were too slow, sorry.\nNo secret for you!")
+      print("\nYou were too slow, sorry.\nNo secret for you!")
       return
     guess = int(input("\nGuess: "))
     guess = round(guess, 4)
     guess = str(guess)
     
-    timeout = time.time() + 3
-    decrease_battery_rate = 0.01
-    iteration = 0
+    timeout = time.time() + 2
+    decrease_battery_rate = 0.000005
     while True:
-      iteration += 1
-
+      time_remaining = timeout - time.time()
       # this ain't no timing sidechannel, so everything takes same time
-      if time.time() > timeout:
+      if time_remaining <= 0:
         break
 
       display_calculating(solved, battery)
       if guess == PIN:
         solved = True
       elif drain_battery:
-        battery -= (decrease_battery_rate / iteration)
-        display_calculating(solved, battery)
+        battery -= (decrease_battery_rate / (time_remaining + 1))
       else:
         leading_nums_factor = 1
         for i in range(len(guess)):
           if guess[i] == PIN[i]:
-            leading_nums_factor += 2
+            leading_nums_factor *= 2
           else:
             break
         decrease_battery_rate *= leading_nums_factor
