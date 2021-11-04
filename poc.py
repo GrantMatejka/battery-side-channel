@@ -59,7 +59,8 @@ def display_result(solved, battery):
   valid = "Correct" if solved else "Incorrect Credentials"
   msg = "\n{:30s}      {:3.2f}%".format(valid, battery)
   print(msg, end=end_char)
-
+  if solved:
+    print(SECRET);
 
 if __name__ == "__main__":
   if len(sys.argv) > 1 and sys.argv[1] == "-c":
