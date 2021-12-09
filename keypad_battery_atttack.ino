@@ -18,7 +18,7 @@
 #define OLED_RESET -1
 #define OLED_ADDR 0x3C // here address is 0x3C for 128x32 display
 
-#define PASSWORD "9345"
+#define PASSWORD "7643"
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -50,7 +50,7 @@ void resetDisplay() {
     display.clearDisplay();
     display.setTextSize(1);
     display.setTextColor(WHITE);
-    display.setCursor(0, 10);
+    display.setCursor(0, 12);
     display.print(emptyEntry);
     
     display.setCursor(100, 10);
@@ -112,7 +112,7 @@ void loop() {
     int seq_matches = 0;
     int i = 0;
 
-    delay(250);
+    delay(150);
 
     while (i < 4 && entryAttempt[i] == PASSWORD[i++]) {
       seq_matches++;
@@ -121,7 +121,8 @@ void loop() {
     if (seq_matches == 4) {
       display.clearDisplay();
       display.setCursor(0, 10);
-      display.println("Secret: XXXXXX");
+      display.print("Correct! Secret: ");
+      display.println(PASSWORD);
       display.display();
       exit(0);
     }
@@ -133,7 +134,7 @@ void loop() {
     display.println("Processing...");
     display.display();
 
-    delay(750);
+    delay(350);
     
     resetDisplay();
     input_counter = 0;
